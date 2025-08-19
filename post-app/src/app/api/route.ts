@@ -7,9 +7,7 @@ import PostRegister from "../utils/post-register";
 export async function POST(request:NextRequest) {
 
     try {
-
         const data = await request.json()
-
         const register = new PostRegister()
         await register.run(data.id, data.title, data.description, data.author)
 
@@ -22,4 +20,5 @@ export async function POST(request:NextRequest) {
             message: 'Failed to save data'
         }, {status:500})
     }
+
 }
