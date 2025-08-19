@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import postgres from "postgres";
 
 export async function POST(request:NextRequest) {
 
     try {
 
         const data = await request.json()
+
+        const connectionString = 'postgresql://postgres.ekyyyptzflltjjbgjdrm:Josue321@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
+        const sql = postgres(connectionString);
+
         let errorGenerate = "";
 
         if (data && data.id && data.title && data.description && data.author) {
@@ -55,8 +60,8 @@ export async function POST(request:NextRequest) {
 
     } catch {
         return NextResponse.json({
-            message: 'The data do not save'
-        }, {status:422})
+            message: 'Failed to save data'
+        }, {status:500})
     }
 
 }
