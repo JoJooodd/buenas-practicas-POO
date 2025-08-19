@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
+import PostRegister from "../utils/post-register";
+
+
+
 
 export async function POST(request:NextRequest) {
 
@@ -7,61 +11,49 @@ export async function POST(request:NextRequest) {
 
         const data = await request.json()
 
-        const connectionString = 'postgresql://postgres.ekyyyptzflltjjbgjdrm:Josue321@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
-        const sql = postgres(connectionString);
+        const register = new PostRegister()
+        await register.run()
 
-        let errorGenerate = "";
+        isValidPost(data);
 
-        if (data && data.id && data.title && data.description && data.author) {
+        await savePost(data);
 
-            if (typeof data.id !== "number") {
-                if (errorGenerate !== ""){
-                    errorGenerate += ' and Invalid id';
-                } else {
-                    errorGenerate = 'Invalid id';
-                }
-            }
-
-            if (typeof data.title !== "string" || data.title.length >= 15) {
-                if (errorGenerate !== ""){
-                    errorGenerate += ' and Invalid title'
-                } else {
-                    errorGenerate = 'Invalid title'
-                }
-            }
-
-            if (typeof data.description !== "string" || 
-                data.description.length >= 40) {
-                if (errorGenerate !== ""){
-                    errorGenerate += ' and Invalid description'
-                } else {
-                    errorGenerate = 'Invalid description'
-                }
-            }
-
-            if (typeof data.author !== "string" || data.author.length <= 1) {
-                if (errorGenerate !== ""){
-                    errorGenerate += ' and Invalid author'
-                } else {
-                    errorGenerate = 'Invalid author'
-                }
-            }
-
-            if (errorGenerate){
-                return NextResponse.json({
-                    message: errorGenerate
-                }, {status: 422});
-            } else {
-                return NextResponse.json({
-                    message: 'Data save succesfully', data:data
-                })
-            }
-        }
-
-    } catch {
+        return NextResponse.json({
+            message: 'Data saved successfully in post'
+        })
+    } catch (error) {
+        console.error('Error saving data:', error);
         return NextResponse.json({
             message: 'Failed to save data'
         }, {status:500})
     }
+}
 
+
+function isValidPost(data:any):void {
+    if (data && data.id && data.title && data.description && data.author) {
+
+        if (typeof data.id !== "number") {
+            throw new Error('Invalid id')
+        }
+
+        if (typeof data.title !== "string" || data.title.length >= 15) {
+            throw new Error('Invalid title')
+        }
+
+        if (typeof data.description !== "string" || 
+            data.description.length >= 40) {
+            throw new Error('Invalid description')
+        }
+
+        if (typeof data.author !== "string" || data.author.length <= 1) {
+            throw new Error('Invalid author')
+        }
+    }
+}
+
+async function savePost(data:any): Promise<void> {
+    const connectionString = 'postgresql://postgres.ekyyyptzflltjjbgjdrm:Josue321@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
+    const sql = postgres(connectionString);
+    await sql `INSERT INTO posts (title, description, author) VALUES (${data.title},  ${data.description}, ${data.author});`
 }
