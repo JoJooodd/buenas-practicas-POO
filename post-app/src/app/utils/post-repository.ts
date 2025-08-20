@@ -6,4 +6,6 @@ export default interface PostRepository {
     seePosts(): any;
 
     updatePosts(post: Post): unknown;
+
+    deletePosts(id:number): unknown;
 }
