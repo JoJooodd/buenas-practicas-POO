@@ -12,7 +12,7 @@ export async function POST(request:NextRequest) {
         const data = await request.json()
         const repository = new PostgresPostRepository();
         const register = new PostRegister(repository)
-        await register.run(data.title, data.description, data.author)
+        await register.run(data.id, data.title, data.description, data.author)
 
         return NextResponse.json({
             message: 'Data saved successfully in post'

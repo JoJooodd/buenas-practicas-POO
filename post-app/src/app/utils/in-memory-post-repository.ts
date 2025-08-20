@@ -34,6 +34,10 @@ export default class InMemoryPostRepository implements PostRepository {
         return this.posts;
     }
 
+    public async updatePosts(post: Post): Promise<void> {
+        
+    }
+
 
 }
 

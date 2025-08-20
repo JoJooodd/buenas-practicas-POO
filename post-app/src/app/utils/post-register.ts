@@ -14,9 +14,9 @@ export default class PostRegister {
         this.repository = repository
     }
 
-    public async run(title: string, description: string, author: string) {
+    public async run(id: number, title: string, description: string, author: string) {
         // Encargado de validar datos y guardar en base de datos
-        const post = Post.create(title, description, author);
+        const post = Post.create(id, title, description, author);
         await this.repository.save(post);
     }
 
