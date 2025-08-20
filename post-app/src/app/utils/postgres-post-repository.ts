@@ -27,6 +27,14 @@ export default class PostgresPostRepository implements PostRepository {
         }
     }
 
+    async seePosts() {
+        try {
+            const posts = await this.sql`SELECT * FROM posts;`;
+            return posts;
+        } catch(error) {
+            console.log("Failed to get the data (posts): ", error);
+        }
+    }
 
 
 }

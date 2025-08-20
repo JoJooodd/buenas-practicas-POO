@@ -5,6 +5,7 @@ import PostRepository from "./post-repository";
 
 
 
+// este es el caso de uso
 export default class PostRegister {
 
     private readonly repository: PostRepository;

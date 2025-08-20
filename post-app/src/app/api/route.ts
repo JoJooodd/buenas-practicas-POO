@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import PostRegister from "../utils/post-register";
 import PostgresPostRepository from "../utils/postgres-post-repository";
+import PostSearcher from "../utils/post-searcher";
 
 
 
@@ -23,4 +24,20 @@ export async function POST(request:NextRequest) {
         }, {status:500})
     }
 
+}
+
+export async function GET(request:NextRequest) {
+    try {
+        const repository = new PostgresPostRepository();
+        const searcher = new PostSearcher(repository);
+        const posts = await searcher.run();
+        return NextResponse.json({
+            dataSaved: posts,
+        });
+    } catch (error) {
+        console.log('Error fetching posts:', error);
+        return NextResponse.json({
+            message: 'Failed to fetch data (posts)'
+        }, {status: 500});
+    }
 }

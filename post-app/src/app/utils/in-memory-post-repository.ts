@@ -1,4 +1,3 @@
-import { promises } from "dns";
 import Post from "./post";
 import PostRepository from "./post-repository";
 
@@ -29,6 +28,10 @@ export default class InMemoryPostRepository implements PostRepository {
             author: author,
         })
 
+    }
+
+    public async seePosts() {
+        return this.posts;
     }
 
 
